@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>桑坦德银行客户交易预测系统</title>
+    <style>
+        :root {
+            --primary: #0063B2;
+            --primary-light: #e9f5ff;
+            --primary-dark: #004e8c;
+            --secondary: #6c757d;
+            --success: #28a745;
+            --danger: #dc3545;
+            --warning: #ffc107;
+            --info: #17a2b8;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --white: #ffffff;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --radius: 8px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        
+        h1 {
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 1rem;
+            font-size: 2.2em;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: var(--secondary);
+            margin-bottom: 1rem;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: center;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        nav a {
+            color: var(--primary);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            margin: 0.25rem;
+            border-radius: var(--radius);
+            transition: all 0.3s ease;
+        }
+        
+        nav a:hover {
+            background-color: var(--primary);
+            color: var(--white);
+        }
+        
+        .active {
+            background-color: var(--primary);
+            color: var(--white);
+        }
+        
+        main {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .card {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card-header {
+            background-color: var(--primary);
+            color: var(--white);
+            padding: 1rem;
+        }
+        
+        .card-body {
+            padding: 1.5rem;
+        }
+        
+        .card h3 {
+            margin-bottom: 0.5rem;
+        }
+        
+        .card p {
+            color: var(--secondary);
+            margin-bottom: 1rem;
+        }
+        
+        .card-footer {
+            background-color: var(--light);
+            padding: 1rem;
+            text-align: right;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--primary);
+            color: var(--white);
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+        
+        .btn:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .info-box {
+            background-color: var(--primary-light);
+            border-left: 4px solid var(--primary);
+            padding: 1rem;
+            margin: 1.5rem 0;
+            border-radius: 0 var(--radius) var(--radius) 0;
+        }
+        
+        .section {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 2rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        
+        h2 {
+            color: var(--primary);
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .feature-list {
+            list-style-type: none;
+        }
+        
+        .feature-list li {
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background-color: var(--light);
+            border-radius: var(--radius);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .feature-list h4 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+        
+        .note {
+            font-style: italic;
+            color: var(--secondary);
+        }
+        
+        @media (max-width: 768px) {
+            main {
+                grid-template-columns: 1fr;
+            }
+            
+            body {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>桑坦德银行客户交易预测系统</h1>
+            <p class="subtitle">基于机器学习的交易预测与数据可视化平台</p>
+            <nav>
+                <a href="#dashboard" class="active">仪表盘</a>
+                <a href="#data-analysis">数据分析</a>
+                <a href="#feature-engineering">特征工程</a>
+                <a href="#model-training">模型训练</a>
+                <a href="#prediction-results">预测结果</a>
+                <a href="#imbalance-handling">不平衡处理</a>
+                <a href="#model-ensemble">模型融合</a>
+            </nav>
+        </header>
+        
+        <div class="info-box">
+            <p>当前您正在查看项目的静态HTML页面。完整的React应用正在构建中，此页面提供项目概述和功能模块说明。</p>
+        </div>
+        
+        <section class="section" id="dashboard">
+            <h2>仪表盘</h2>
+            <p>提供系统整体概览，包括关键指标和统计数据。</p>
+            
+            <main>
+                <div class="card">
+                    <div class="card-header">
+                        <h3>客户总数</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>系统中的总客户数量</p>
+                        <h2>200,000</h2>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>预测交易数</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>预测将发生交易的客户数量</p>
+                        <h2>20,345</h2>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>交易率</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>预测交易客户占总客户的比例</p>
+                        <h2>10.2%</h2>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>模型准确率</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>当前模型的预测准确率</p>
+                        <h2>92.3%</h2>
+                    </div>
+                </div>
+            </main>
+        </section>
+        
+        <section class="section" id="data-analysis">
+            <h2>数据分析</h2>
+            <p>展示数据分布、特征相关性等数据分析结果，帮助用户理解数据特征和模式。</p>
+            
+            <div class="info-box">
+                <p>在完整的应用中，此模块包含以下功能：</p>
+            </div>
+            
+            <ul class="feature-list">
+                <li>
+                    <h4>特征分布可视化</h4>
+                    <p>通过直方图展示各个特征的数据分布情况，包括均值、中位数、标准差等统计指标。</p>
+                </li>
+                <li>
+                    <h4>特征相关性分析</h4>
+                    <p>通过热力图展示特征之间的相关性，帮助识别高度相关的特征组。</p>
+                </li>
+                <li>
+                    <h4>数据异常值检测</h4>
+                    <p>识别并展示数据中的异常值，帮助理解数据质量问题。</p>
+                </li>
+                <li>
+                    <h4>目标变量分析</h4>
+                    <p>分析目标变量（交易发生与否）的分布情况，了解数据不平衡程度。</p>
+                </li>
+            </ul>
+        </section>
+        
+        <section class="section" id="feature-engineering">
+            <h2>特征工程</h2>
+            <p>展示特征重要性、特征选择方法比较、特征相关性热力图等，帮助用户了解特征工程过程和结果。</p>
+            
+            <div class="info-box">
+                <p>在完整的应用中，此模块包含以下功能：</p>
+            </div>
+            
+            <ul class="feature-list">
+                <li>
+                    <h4>特征重要性排序</h4>
+                    <p>展示各个特征对预测结果的重要性排序，帮助理解哪些特征对模型贡献最大。</p>
+                </li>
+                <li>
+                    <h4>特征选择方法比较</h4>
+                    <p>比较不同特征选择方法（如过滤法、包装法、嵌入法）的性能差异。</p>
+                </li>
+                <li>
+                    <h4>特征相关性热力图</h4>
+                    <p>通过热力图展示重要特征之间的相关性，帮助理解特征间的关系。</p>
+                </li>
+                <li>
+                    <h4>特征工程方法表</h4>
+                    <p>展示各种特征工程方法及其效果，包括特征变换、特征组合等。</p>
+                </li>
+            </ul>
+        </section>
+        
+        <section class="section" id="model-training">
+            <h2>模型训练与评估</h2>
+            <p>展示模型训练过程、评估指标、混淆矩阵、ROC曲线、PR曲线等，帮助用户了解模型性能。</p>
+            
+            <div class="info-box">
+                <p>在完整的应用中，此模块包含以下功能：</p>
+            </div>
+            
+            <ul class="feature-list">
+                <li>
+                    <h4>模型训练过程</h4>
+                    <p>展示模型训练过程中的损失函数变化、准确率变化等指标。</p>
+                </li>
+                <li>
+                    <h4>混淆矩阵</h4>
+                    <p>通过混淆矩阵展示模型的真阳性、假阳性、真阴性、假阴性预测结果。</p>
+                </li>
+                <li>
+                    <h4>ROC曲线</h4>
+                    <p>展示模型的ROC曲线和AUC值，评估模型的分类性能。</p>
+                </li>
+                <li>
+                    <h4>PR曲线</h4>
+                    <p>展示模型的精确率-召回率曲线，特别适用于不平衡数据集的评估。</p>
+                </li>
+                <li>
+                    <h4>训练与验证指标</h4>
+                    <p>比较模型在训练集和验证集上的性能指标，检测过拟合问题。</p>
+                </li>
+                <li>
+                    <h4>阈值优化</h4>
+                    <p>通过调整分类阈值，优化模型在特定指标上的表现。</p>
+                </li>
+            </ul>
+        </section>
+        
+        <section class="section" id="prediction-results">
+            <h2>预测结果</h2>
+            <p>展示预测分布、客户预测列表、预测解释等，帮助用户理解预测结果和解释性。</p>
+            
+            <div class="info-box">
+                <p>在完整的应用中，此模块包含以下功能：</p>
+            </div>
+            
+            <ul class="feature-list">
+                <li>
+                    <h4>预测分布</h4>
+                    <p>展示预测概率的分布情况，了解模型预测的整体趋势。</p>
+                </li>
+                <li>
+                    <h4>客户预测列表</h4>
+                    <p>展示各个客户的预测结果，包括预测概率、预测类别等信息。</p>
+                </li>
+                <li>
+                    <h4>预测解释</h4>
+                    <p>通过SHAP值等方法，解释模型对特定客户的预测结果，提高模型透明度。</p>
+                </li>
+            </ul>
+        </section>
+        
+        <section class="section" id="imbalance-handling">
+            <h2>数据不平衡处理</h2>
+            <p>展示不同数据不平衡处理方法的效果比较，包括类别分布、性能比较、混淆矩阵等。</p>
+            
+            <div class="info-box">
+                <p>在完整的应用中，此模块包含以下功能：</p>
+            </div>
+            
+            <ul class="feature-list">
+                <li>
+                    <h4>类别分布</h4>
+                    <p>展示原始数据和经过不平衡处理后的数据类别分布对比。</p>
+                </li>
+                <li>
+                    <h4>不平衡处理方法性能比较</h4>
+                    <p>比较不同不平衡处理方法（如SMOTE、随机过采样、随机欠采样等）的性能指标。</p>
+                </li>
+                <li>
+                    <h4>混淆矩阵</h4>
+                    <p>展示不同不平衡处理方法下模型的混淆矩阵，了解对少数类的预测能力。</p>
+                </li>
+                <li>
+                    <h4>不平衡处理方法表</h4>
+                    <p>展示各种不平衡处理方法的特点、优缺点和适用场景。</p>
+                </li>
+            </ul>
+        </section>
+        
+        <section class="section" id="model-ensemble">
+            <h2>模型融合</h2>
+            <p>展示不同模型融合方法的效果比较，包括性能比较、特征重要性比较等。</p>
+            
+            <div class="info-box">
+                <p>在完整的应用中，此模块包含以下功能：</p>
+            </div>
+            
+            <ul class="feature-list">
+                <li>
+                    <h4>单个模型与融合模型性能比较</h4>
+                    <p>比较各个单一模型和融合模型的性能指标，展示融合带来的性能提升。</p>
+                </li>
+                <li>
+                    <h4>不同融合方法性能比较</h4>
+                    <p>比较不同融合方法（如投票法、堆叠法、加权平均等）的性能差异。</p>
+                </li>
+                <li>
+                    <h4>不同模型特征重要性比较</h4>
+                    <p>比较不同模型对特征重要性的评估差异，了解模型的侧重点。</p>
+                </li>
+                <li>
+                    <h4>融合方法表</h4>
+                    <p>展示各种融合方法的特点、优缺点和适用场景。</p>
+                </li>
+            </ul>
+        </section>
+        
+        <footer>
+            <p>© 2025 桑坦德银行客户交易预测系统 | 基于React + TypeScript + Shadcn UI开发</p>
+            <p class="note">最后更新时间：2025-08-30 11:00</p>
+        </footer>
+    </div>
+    
+    <script>
+        // 简单的导航高亮效果
+        document.addEventListener('DOMContentLoaded', function() {
+            const navLinks = document.querySelectorAll('nav a');
+            const sections = document.querySelectorAll('section');
+            
+            window.addEventListener('scroll', function() {
+                let current = '';
+                
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    if (pageYOffset >= sectionTop - 200) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href').substring(1) === current) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
